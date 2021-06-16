@@ -10,6 +10,7 @@ const KEY: &str = "ccc";
 const SECRET: &str = "WXZFwxzf123";
 const BUCKET: &str = "bucket0";
 const OBJECT: &str = "test.md";
+
 #[tokio::main]
 async fn put() -> Result<String, Box<StdError>> {
     let tasks: [(String, String); 2] = [

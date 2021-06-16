@@ -29,3 +29,8 @@ Found 4 outliers among 100 measurements (4.00%)
     - high mild: 轻微的高离群值
     - 尾延迟指的是后两种
 
+## 补充
+该项目基于 [rusty-s3](https://github.com/paolobarbolini/rusty-s3) 和 [tokio](https://github.com/tokio-rs/tokio) 异步运行时编写，有兴趣的同学可以尝试让本项目支持 [async-std](https://github.com/async-rs/async-std) 异步运行时，欢迎 PR。  
+本项目编写的过程中引发了一个 Pull Request: <https://github.com/paolobarbolini/rusty-s3/pull/14>，开源社区的魅力就在于此!  
+作者邮箱: <linuxgnulover@gmail.com>  
+
