@@ -29,7 +29,7 @@ impl Task for PutTask {
     }
 }
 
-pub struct PutTaskBuiler<const N: usize> {
+pub struct PutTaskBuilder<const N: usize> {
     endpoint: Url,
     key: String,
     secret: String,
@@ -37,7 +37,7 @@ pub struct PutTaskBuiler<const N: usize> {
     tasks: [(String, String); N]
 }
 
-impl<const N: usize> PutTaskBuiler<N> {
+impl<const N: usize> PutTaskBuilder<N> {
     pub fn new<U, S> (
         endpoint: U,
         key: S,
@@ -59,7 +59,7 @@ impl<const N: usize> PutTaskBuiler<N> {
     }
 }
 
-impl<const N: usize> TaskBuiler for PutTaskBuiler<N> {
+impl<const N: usize> TaskBuiler for PutTaskBuilder<N> {
     type R = String;
     type T = PutTask;
     type I = Vec<PutTask>;

@@ -7,6 +7,7 @@ mod single;
 
 use async_trait::async_trait;
 pub use get::{GetTask, GetTaskBuilder};
+pub use put::{PutTask, PutTaskBuilder};
 pub type StdError = dyn std::error::Error;
 
 #[async_trait]
