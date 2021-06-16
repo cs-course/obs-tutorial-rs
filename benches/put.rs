@@ -5,6 +5,11 @@ use criterion::{criterion_group, criterion_main, Criterion};
 use reqwest::Url;
 use s3_bench_rs::{PutTaskBuilder, StdError, Task, TaskBuiler};
 
+const ENDPOINT: &str = "http://172.25.41.154:9000";
+const KEY: &str = "ccc";
+const SECRET: &str = "WXZFwxzf123";
+const BUCKET: &str = "bucket0";
+const OBJECT: &str = "test.md";
 #[tokio::main]
 async fn put() -> Result<String, Box<StdError>> {
     let tasks: [(String, String); 2] = [
@@ -12,13 +17,13 @@ async fn put() -> Result<String, Box<StdError>> {
         ("bucket1".into(), "test1.txt".into()),
     ];
     let put_task_builder = PutTaskBuilder::new(
-        "http://172.25.38.164:9000".parse::<Url>().unwrap(),
-        "ccc",
-        "WXZFwxzf123",
+        ENDPOINT.parse::<Url>().unwrap(),
+        KEY,
+        SECRET,
         "minio",
         tasks,
     );
-    let task = put_task_builder.spawn("bucket0", "test.md");
+    let task = put_task_builder.spawn(BUCKET, OBJECT);
     let resp = task.run().await?;
     Ok(resp)
 }
