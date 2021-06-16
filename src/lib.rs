@@ -4,13 +4,14 @@ mod get;
 mod config;
 
 use async_trait::async_trait;
-use std::error::Error as StdError;
+pub use get::{GetTask, GetTaskBuilder};
+pub type StdError = dyn std::error::Error;
 
 #[async_trait]
 pub trait Task {
     type R: Sized;
     /// 夺取任务的所有权去运行，运行完毕后释放内存空间
-    async fn run(self) -> Result<Self::R, Box<dyn StdError>>;
+    async fn run(self) -> Result<Self::R, Box<StdError>>;
 }
 
 pub trait TaskBuiler {

@@ -31,13 +31,12 @@ impl GetTask {
             .insert("response-cache-control", "no-cache, no-store");
         action.sign(ONE_HOUR)
     }
-
 }
 
 #[async_trait]
 impl Task for GetTask {
     type R = String;
-    async fn run(self) -> Result<Self::R, Box<dyn StdError>> {
+    async fn run(self) -> Result<Self::R, Box<StdError>> {
         let signed_url = self.signed_url();
         let client = Client::new();
         let resp = client.get(signed_url).send().await?.error_for_status()?;
@@ -71,6 +70,10 @@ impl GetTaskBuilder {
             region: region.into(),
             pool: Vec::new()
         }
+    }
+
+    pub fn append_task<S: Into<String>>(&mut self, bucket: S, object: S) {
+        self.pool.push((bucket.into(), object.into()));
     }
 }
 
