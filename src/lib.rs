@@ -1,6 +1,7 @@
 //! Benchmark for AWS S3
 
 mod get;
+mod put;
 mod config;
 mod single;
 
