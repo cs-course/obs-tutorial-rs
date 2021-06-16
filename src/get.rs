@@ -4,28 +4,13 @@ use reqwest::{Client, Url};
 use crate::{Task, TaskBuiler, StdError};
 use async_trait::async_trait;
 use super::config::*;
+use super::single::SingleTask;
 
-pub struct GetTask {
-    pub(crate) bucket: Bucket,
-    pub(crate) credentials: Credentials,
-    pub(crate) object: String
-}
+pub struct GetTask(pub SingleTask);
 
 impl GetTask {
-    pub fn new<S: Into<String>>(
-        bucket: Bucket,
-        credentials: Credentials,
-        object: S
-    ) -> Self {
-        Self {
-            bucket,
-            credentials,
-            object: object.into()
-        }
-    }
-
     pub fn signed_url(&self) -> Url {
-        let mut action = GetObject::new(&self.bucket, Some(&self.credentials), &self.object);
+        let mut action = GetObject::new(&self.0.bucket, Some(&self.0.credentials), &self.0.object);
         action
             .query_mut()
             .insert("response-cache-control", "no-cache, no-store");
@@ -84,11 +69,7 @@ impl TaskBuiler for GetTaskBuilder {
     fn spawn(&self, bucket: &str, object: &str) -> Self::T {
         let bucket = Bucket::new(self.endpoint.clone(), true, bucket, self.region.as_str()).unwrap();
         let credentials = Credentials::new(self.key.clone(), self.secret.clone());
-        GetTask::new(
-            bucket,
-            credentials,
-            object
-        )
+        GetTask(SingleTask::new(bucket, credentials, object))
     }
 
     fn spawn_tier(&self) -> Self::I {

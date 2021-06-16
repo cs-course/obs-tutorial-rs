@@ -2,6 +2,7 @@
 
 mod get;
 mod config;
+mod single;
 
 use async_trait::async_trait;
 pub use get::{GetTask, GetTaskBuilder};
