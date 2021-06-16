@@ -1,5 +1,8 @@
 //! Benchmark for AWS S3
 
+mod get;
+mod config;
+
 use async_trait::async_trait;
 use std::error::Error as StdError;
 
@@ -13,6 +16,7 @@ pub trait Task {
 pub trait TaskBuiler {
     type R: Sized;
     type T: Task<R = Self::R>;
-    fn spawn(&self) -> Self::T;
-    fn spawn_tier(&self) -> dyn Iterator<Item = Self::T>;
+    type I: IntoIterator<Item = Self::T, IntoIter = std::vec::IntoIter<Self::T>>;
+    fn spawn(&self, bucket: &str, object: &str) -> Self::T;
+    fn spawn_tier(&self) -> Self::I;
 }
