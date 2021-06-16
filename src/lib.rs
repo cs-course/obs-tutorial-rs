@@ -1,8 +1,8 @@
 //! Benchmark for AWS S3
 
+mod config;
 mod get;
 mod put;
-mod config;
 mod single;
 
 use async_trait::async_trait;

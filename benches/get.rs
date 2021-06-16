@@ -1,9 +1,9 @@
 //! Get 请求测试
 
-use criterion::{criterion_group, criterion_main, Criterion};
 use criterion::async_executor::FuturesExecutor;
-use s3_bench_rs::{GetTaskBuilder, StdError, Task, TaskBuiler};
+use criterion::{criterion_group, criterion_main, Criterion};
 use reqwest::Url;
+use s3_bench_rs::{GetTaskBuilder, StdError, Task, TaskBuiler};
 
 #[tokio::main]
 async fn get() -> Result<String, Box<StdError>> {
@@ -11,7 +11,7 @@ async fn get() -> Result<String, Box<StdError>> {
         "http://172.25.38.164:9000".parse::<Url>().unwrap(),
         "ccc",
         "WXZFwxzf123",
-        "minio"
+        "minio",
     );
     let task = get_task_builder.spawn("bucket0", "test.md");
     let text = task.run().await?;

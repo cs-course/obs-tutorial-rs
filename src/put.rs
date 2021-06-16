@@ -1,10 +1,10 @@
 //! Put object task implemetation
-use rusty_s3::{Bucket, Credentials, S3Action, actions::PutObject};
-use reqwest::{Client, Url};
-use crate::{Task, TaskBuiler, StdError};
-use async_trait::async_trait;
 use super::config::*;
 use super::single::SingleTask;
+use crate::{StdError, Task, TaskBuiler};
+use async_trait::async_trait;
+use reqwest::{Client, Url};
+use rusty_s3::{actions::PutObject, Bucket, Credentials, S3Action};
 
 pub struct PutTask(pub SingleTask);
 
@@ -34,27 +34,27 @@ pub struct PutTaskBuilder<const N: usize> {
     key: String,
     secret: String,
     region: String,
-    tasks: [(String, String); N]
+    tasks: [(String, String); N],
 }
 
 impl<const N: usize> PutTaskBuilder<N> {
-    pub fn new<U, S> (
+    pub fn new<U, S>(
         endpoint: U,
         key: S,
         secret: S,
         region: S,
-        tasks: [(String, String); N]
+        tasks: [(String, String); N],
     ) -> Self
     where
         U: Into<Url>,
-        S: Into<String>
+        S: Into<String>,
     {
         Self {
             endpoint: endpoint.into(),
             key: key.into(),
             secret: secret.into(),
             region: region.into(),
-            tasks
+            tasks,
         }
     }
 }
@@ -64,12 +64,16 @@ impl<const N: usize> TaskBuiler for PutTaskBuilder<N> {
     type T = PutTask;
     type I = Vec<PutTask>;
     fn spawn(&self, bucket: &str, object: &str) -> Self::T {
-        let bucket = Bucket::new(self.endpoint.clone(), true, bucket, self.region.as_str()).unwrap();
+        let bucket =
+            Bucket::new(self.endpoint.clone(), true, bucket, self.region.as_str()).unwrap();
         let credentials = Credentials::new(self.key.clone(), self.secret.clone());
         PutTask(SingleTask::new(bucket, credentials, object))
     }
 
     fn spawn_tier(&self) -> Self::I {
-        self.tasks.iter().map(|(bucket, object)| self.spawn(bucket.as_str(), object.as_str())).collect()
+        self.tasks
+            .iter()
+            .map(|(bucket, object)| self.spawn(bucket.as_str(), object.as_str()))
+            .collect()
     }
 }

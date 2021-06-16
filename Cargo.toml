@@ -17,3 +17,7 @@ criterion = {version = "0.3.4", features = ["async_futures", "html_reports"]}
 [[bench]]
 name = "get"
 harness = false
+
+[[bench]]
+name = "put"
+harness = false

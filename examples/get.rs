@@ -1,5 +1,5 @@
-use s3_bench_rs::{GetTaskBuilder, StdError, Task, TaskBuiler};
 use reqwest::Url;
+use s3_bench_rs::{GetTaskBuilder, StdError, Task, TaskBuiler};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<StdError>> {
@@ -7,7 +7,7 @@ async fn main() -> Result<(), Box<StdError>> {
         "http://172.22.110.215:9000".parse::<Url>().unwrap(),
         "ccc",
         "WXZFwxzf123",
-        "minio"
+        "minio",
     );
     let task = get_task_builer.spawn("bucket0", "test.md");
     let text = task.run().await?;

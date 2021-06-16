@@ -1,10 +1,10 @@
 //! Get object task implementation
-use rusty_s3::{Bucket, Credentials, S3Action, actions::GetObject};
-use reqwest::{Client, Url};
-use crate::{Task, TaskBuiler, StdError};
-use async_trait::async_trait;
 use super::config::*;
 use super::single::SingleTask;
+use crate::{StdError, Task, TaskBuiler};
+use async_trait::async_trait;
+use reqwest::{Client, Url};
+use rusty_s3::{actions::GetObject, Bucket, Credentials, S3Action};
 
 pub struct GetTask(pub SingleTask);
 
@@ -34,26 +34,21 @@ pub struct GetTaskBuilder {
     key: String,
     secret: String,
     region: String,
-    pool: Vec<(String, String)>
+    pool: Vec<(String, String)>,
 }
 
 impl GetTaskBuilder {
-    pub fn new<U, S> (
-        endpoint: U,
-        key: S,
-        secret: S,
-        region: S,
-    ) -> Self
+    pub fn new<U, S>(endpoint: U, key: S, secret: S, region: S) -> Self
     where
         U: Into<Url>,
-        S: Into<String>
+        S: Into<String>,
     {
         Self {
             endpoint: endpoint.into(),
             key: key.into(),
             secret: secret.into(),
             region: region.into(),
-            pool: Vec::new()
+            pool: Vec::new(),
         }
     }
 
@@ -67,12 +62,16 @@ impl TaskBuiler for GetTaskBuilder {
     type T = GetTask;
     type I = Vec<GetTask>;
     fn spawn(&self, bucket: &str, object: &str) -> Self::T {
-        let bucket = Bucket::new(self.endpoint.clone(), true, bucket, self.region.as_str()).unwrap();
+        let bucket =
+            Bucket::new(self.endpoint.clone(), true, bucket, self.region.as_str()).unwrap();
         let credentials = Credentials::new(self.key.clone(), self.secret.clone());
         GetTask(SingleTask::new(bucket, credentials, object))
     }
 
     fn spawn_tier(&self) -> Self::I {
-        self.pool.iter().map(|(bucket, object)| self.spawn(bucket.as_str(), object.as_str())).collect()
+        self.pool
+            .iter()
+            .map(|(bucket, object)| self.spawn(bucket.as_str(), object.as_str()))
+            .collect()
     }
 }
