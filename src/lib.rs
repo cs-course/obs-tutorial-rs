@@ -19,6 +19,7 @@ pub trait Task {
     async fn run(self) -> Result<Self::R, Box<StdError>>;
 }
 
+/// 任务构建器
 pub trait TaskBuiler {
     type R: Sized;
     type T: Task<R = Self::R>;
