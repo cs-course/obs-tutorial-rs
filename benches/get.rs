@@ -12,12 +12,8 @@ const BUCKET: &str = "bucket0";
 const OBJECT: &str = "test.md";
 #[tokio::main]
 async fn get() -> Result<String, Box<StdError>> {
-    let get_task_builder = GetTaskBuilder::new(
-        ENDPOINT.parse::<Url>().unwrap(),
-        KEY,
-        SECRET,
-        "minio",
-    );
+    let get_task_builder =
+        GetTaskBuilder::new(ENDPOINT.parse::<Url>().unwrap(), KEY, SECRET, "minio");
     let task = get_task_builder.spawn(BUCKET, OBJECT);
     let text = task.run().await?;
     Ok(text)

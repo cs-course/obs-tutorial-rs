@@ -62,8 +62,13 @@ impl TaskBuiler for GetTaskBuilder {
     type T = GetTask;
     type I = Vec<GetTask>;
     fn spawn(&self, bucket: &str, object: &str) -> Self::T {
-        let bucket =
-            Bucket::new(self.endpoint.clone(), true, bucket, self.region.as_str()).unwrap();
+        let bucket = Bucket::new(
+            self.endpoint.clone(),
+            true,
+            bucket.into(),
+            self.region.clone(),
+        )
+        .unwrap();
         let credentials = Credentials::new(self.key.clone(), self.secret.clone());
         GetTask(SingleTask::new(bucket, credentials, object))
     }
