@@ -1,15 +1,15 @@
 //! Benchmark for AWS S3
 
 mod config;
+mod delete;
 mod get;
 mod put;
-mod delete;
 mod single;
 
 use async_trait::async_trait;
+pub use delete::{DeleteTask, DeleteTaskBuilder};
 pub use get::{GetTask, GetTaskBuilder};
 pub use put::{PutTask, PutTaskBuilder};
-pub use delete::{DeleteTask, DeleteTaskBuilder};
 pub type StdError = dyn std::error::Error;
 
 #[async_trait]

@@ -11,7 +11,8 @@ pub struct DeleteTask(pub SingleTask);
 
 impl DeleteTask {
     pub fn signed_url(&self) -> Url {
-        let mut action = DeleteObject::new(&self.0.bucket, Some(&self.0.credentials), &self.0.object);
+        let mut action =
+            DeleteObject::new(&self.0.bucket, Some(&self.0.credentials), &self.0.object);
         action
             .query_mut()
             .insert("response-cache-control", "no-cache, no-store");
@@ -64,9 +65,14 @@ impl<'a> TaskBuiler for DeleteTaskBuilder<'a> {
     type T = DeleteTask;
     type I = Vec<DeleteTask>;
     fn spawn(&self, bucket: &str, object: &str) -> Self::T {
-        let bucket =
-            Bucket::new(self.endpoint.clone(), true, bucket, self.region).unwrap();
-        let credentials = Credentials::new(self.key.clone(), self.secret.clone());
+        let bucket = Bucket::new(
+            self.endpoint.clone(),
+            true,
+            bucket.into(),
+            self.region.into(),
+        )
+        .unwrap();
+        let credentials = Credentials::new(self.key.into(), self.secret.into());
         DeleteTask(SingleTask::new(bucket, credentials, object))
     }
 

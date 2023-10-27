@@ -64,8 +64,13 @@ impl<const N: usize> TaskBuiler for PutTaskBuilder<N> {
     type T = PutTask;
     type I = Vec<PutTask>;
     fn spawn(&self, bucket: &str, object: &str) -> Self::T {
-        let bucket =
-            Bucket::new(self.endpoint.clone(), true, bucket, self.region.as_str()).unwrap();
+        let bucket = Bucket::new(
+            self.endpoint.clone(),
+            true,
+            bucket.into(),
+            self.region.clone(),
+        )
+        .unwrap();
         let credentials = Credentials::new(self.key.clone(), self.secret.clone());
         PutTask(SingleTask::new(bucket, credentials, object))
     }

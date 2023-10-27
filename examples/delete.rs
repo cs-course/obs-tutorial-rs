@@ -14,10 +14,13 @@ async fn main() -> Result<(), Box<StdError>> {
     );
     let task = get_task_builer.spawn("bucket0", "test.md");
     task.run().await?;
-    let data = [("bucket1".to_string(), "test0.txt".to_string()), ("bucket1".to_string(), "test1.txt".to_string())];
+    let data = [
+        ("bucket1".to_string(), "test0.txt".to_string()),
+        ("bucket1".to_string(), "test1.txt".to_string()),
+    ];
     for d in data.iter() {
         get_task_builer.append_task(&d.0, &d.1);
-    }    
+    }
     let mut tasks = get_task_builer.spawn_tier();
     while let Some(task) = tasks.pop() {
         task.run().await?;
